@@ -30,6 +30,7 @@ function checkPersonalityType (keyword) {
 
 }
 
+//
 function addKeytoPersonalityPool(keyword,poolId) {
     switch (poolId) {
       case 1: jockGirl.keywords.push(keyword);  break;
