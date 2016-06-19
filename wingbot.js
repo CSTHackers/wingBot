@@ -199,7 +199,7 @@ function receivedPostback(event) {
   // button for Structured Messages.
   var payload = event.postback.payload;
 
-  if (stateOftheApp.lastQuestion == "gender") user.gender = payload;
+  if (stateOftheApp.state == {0,0}) user.gender = payload;
   else {
     if(payload == "Yes") sendMessage("Ok, then I will use this fact to write your About me.");
     else sendMessage("")
