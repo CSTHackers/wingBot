@@ -1,5 +1,5 @@
 'use strict'
-const http = require('http')
+const https = require('https')
 const Bot = require('messenger-bot')
 
 let bot = new Bot({
@@ -25,4 +25,4 @@ bot.on('message', (payload, reply) => {
   })
 })
 
-http.createServer(bot.middleware()).listen(3000)
+https.createServer(bot.middleware()).listen(80)
