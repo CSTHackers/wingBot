@@ -4,7 +4,18 @@
 var user  = {
   name = "";
   gender ="";
+  facts = {" "};
 }
+
+var stateOftheApp = {
+  state = {0,0};
+  userAnswer = "";
+}
+
+var openEndedQuestions = {"Tell me one interesting thing about yourself.",
+                  "What can you do better than anyone else?",
+                  "What do you do for fun?",
+                  "empty string for test"};
 
 //TODO: function that returns message when bot starts
 
@@ -26,7 +37,7 @@ function getUserName () {
 
 //chooseGender function where 3 buttons are shown and the user chooses their prefered gender
 function chooseGender() {
-  message = {
+ var  message = {
       "attachment":{
           "type":"template",
           "payload":{
@@ -52,9 +63,21 @@ function chooseGender() {
           }
         }
   };
-
-
+  stateOftheApp.state = {0,0};
+  sendMessage(message);
+  //try to see if it works putting this function here that calls the first open ended question:
+  askOpenEndedQuestion();
 }
+
+//function called to get bot to give you one of the open ended questions:
+function askOpenEndedQuestion() {
+  stateOftheApp.state = {1,0};
+  var random = Math.floor(Math.random() * openEndedQuestions.length());
+  sendMessage(openEndedQuestions[random]);
+  openEndedQuestions.splice(random, 1);
+}
+
+
 
 //TODO: sendMessage function
 function sendMessage() {
@@ -76,7 +99,6 @@ function getAnswer() {
  *
  */
 app.post('/webhook', function (req, res) {
-
   var data = req.body;
 
   // Make sure this is a page subscription
@@ -127,20 +149,21 @@ function receivedMessage(event) {
   var messageId = message.mid;
   // You may get a text or attachment but not both
   var messageText = message.text;
-  //var messageAttachments = message.attachments;
 
-  //TODO:set up functions to process messagesRecieved 
+  //TODO:set up functions to process messagesRecieved
   if (messageText) {
-
     // If we receive a text message, check to see if it matches any special
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
-    switch (messageText) {
-      case 'image':
-        sendImageMessage(senderID);
-        break;
+    switch (stateOftheApp.state[0]) {
+      case 1:
+        if (isNegative(messageText)) {
+          sendMessage(yesOrNoButtons("This does not seem like a very positive fact about yourself, are you sure you do not want to change your answer?"));
+        } else {
+          user.facts.push(messageText);
+        }
 
-      case 'button':
+        user.facts.push(messageText);
         sendButtonMessage(senderID);
         break;
 
@@ -176,13 +199,44 @@ function receivedPostback(event) {
   // button for Structured Messages.
   var payload = event.postback.payload;
 
+  if (stateOftheApp.lastQuestion == "gender") user.gender = payload;
+  else {
+    if(payload == "Yes") sendMessage("Ok, then I will use this fact to write your About me.");
+    else sendMessage("")
+  }
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
   return payload;
   // When a postback is called, we'll send a message back to the sender to
   // let them know it was successful
-  //sendTextMessage(senderID, "Postback called");
+  sendMessage(senderID, "Postback called");
+}
+
+//function that sends a yesorno buttons template to the user
+function yesOrNoButtons(title) {
+  var  message = {
+       "attachment":{
+           "type":"template",
+           "payload":{
+               "template_type":"button",
+               "text":title,
+               "buttons":[
+               {
+                 "type":"postback",
+                 "title":"Yes",
+                 "payload":"Yes"
+               },
+               {
+                 "type":"postback",
+                 "title":"No",
+                 "payload":"No"
+               }
+               ]
+           }
+         }
+   };
+   sendMessage(message);
 }
 
 
