@@ -1,0 +1,26 @@
+{
+  "name": "wingbot",
+  "version": "1.0.0",
+  "description": "Chatbot for Messenger",
+  "main": "main.js",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.14.0",
+    "messenger-bot": "^2.3.0",
+    "request": "^2.72.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CSTHackers/wingBot.git"
+  },
+  "author": "CST Hackers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CSTHackers/wingBot/issues"
+  },
+  "homepage": "https://github.com/CSTHackers/wingBot#readme"
+}
